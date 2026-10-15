@@ -1,0 +1,409 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&family=DM+Mono:wght@400;500&display=swap');
+
+
+:root {
+  --bg: #f0f4f8;
+  --surface: #ffffff;
+  --surface-2: #e8eef5;
+  --border: #cdd8e3;
+  --border-2: #b0c0d0;
+
+  --blue: #1a6db5;
+  --blue-dark: #0f4d85;
+  --blue-light: #d6e8f8;
+  --blue-muted: #4a90c4;
+
+  --green: #1a8a5a;
+  --green-bg: #d4f0e4;
+  --red: #c0392b;
+  --red-bg: #fce8e6;
+  --amber: #b07a10;
+  --amber-bg: #fdf3d6;
+
+  --text: #1a2535;
+  --text-2: #4a5a6e;
+  --text-3: #7a8fa5;
+  --text-inv: #ffffff;
+
+  --radius: 6px;
+  --radius-lg: 10px;
+  --shadow: 0 1px 4px rgba(20, 50, 90, 0.08), 0 4px 16px rgba(20, 50, 90, 0.06);
+  --shadow-lg: 0 4px 24px rgba(20, 50, 90, 0.14);
+
+  --font: 'DM Sans', sans-serif;
+  --mono: 'DM Mono', monospace;
+
+  --transition: 0.18s ease;
+}
+
+/* ??? RESET & BASE ????????????????????????????? */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 15px;
+}
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.55;
+  background-image:
+    radial-gradient(circle at 80% 10%, rgba(26, 109, 181, 0.06) 0%, transparent 50%),
+    radial-gradient(circle at 10% 90%, rgba(26, 138, 90, 0.04) 0%, transparent 40%);
+}
+
+/* ??? SECCIONES ???????????????????????????????? */
+.seccion {
+  display: none;
+}
+
+.activa {
+  display: block;
+}
+
+/* ??? ENCABEZADO H1 ???????????????????????????? */
+h1 {
+  background: var(--blue-dark);
+  color: var(--text-inv);
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.75rem 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  border-bottom: 2px solid var(--blue);
+}
+
+h1::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #5bc8f0;
+  box-shadow: 0 0 0 3px rgba(91, 200, 240, 0.3);
+}
+
+/* ??? CONTENEDOR PRINCIPAL ????????????????????? */
+.seccion.activa,
+div[id]:not(body > div:not([class])) {
+  max-width: 900px;
+  margin: 2rem auto;
+  padding: 0 1.5rem;
+}
+
+/* ??? TARJETAS DE SECCI�N ?????????????????????? */
+#login,
+#datos_gestor,
+#datos_sanitario,
+#inicio,
+#inicio_sanitario,
+#recurso,
+#nueva_reserva,
+#nueva_resenya {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 2rem 2.5rem;
+  box-shadow: var(--shadow);
+  max-width: 860px;
+  margin: 2rem auto;
+}
+
+/* ??? HEADINGS ????????????????????????????????? */
+h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--blue-dark);
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 2px solid var(--blue-light);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+h3 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-2);
+  margin: 1.8rem 0 0.8rem;
+}
+
+/* ??? CAMPOS DE FORMULARIO ????????????????????? */
+div:has(> input),
+div:has(> select) {
+  margin-bottom: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+div:has(> input)>*:first-child,
+div:has(> select)>*:first-child {
+  min-width: 120px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-2);
+  flex-shrink: 0;
+}
+
+input[type="text"],
+input[type="password"],
+input:not([type]) {
+  flex: 1;
+  min-width: 180px;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border-2);
+  border-radius: var(--radius);
+  font-family: var(--font);
+  font-size: 0.9rem;
+  color: var(--text);
+  background: var(--bg);
+  transition: border-color var(--transition), box-shadow var(--transition);
+  outline: none;
+}
+
+input:focus {
+  border-color: var(--blue);
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(26, 109, 181, 0.12);
+}
+
+select {
+  flex: 1;
+  min-width: 180px;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border-2);
+  border-radius: var(--radius);
+  font-family: var(--font);
+  font-size: 0.9rem;
+  color: var(--text);
+  background: var(--bg);
+  cursor: pointer;
+  transition: border-color var(--transition);
+  outline: none;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%234a5a6e' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  padding-right: 2.2rem;
+}
+
+select:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px rgba(26, 109, 181, 0.12);
+}
+
+/* ??? BOTONES ?????????????????????????????????? */
+button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1.1rem;
+  border: none;
+  border-radius: var(--radius);
+  font-family: var(--font);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition);
+  margin: 0.35rem 0.25rem 0.35rem 0;
+  letter-spacing: 0.01em;
+}
+
+/* Primario */
+button[onclick="login()"],
+button[onclick="registro()"],
+button[onclick="guardar_recurso()"],
+button[onclick="guardar_resenya()"],
+button[onclick="buscar()"] {
+  background: var(--blue);
+  color: var(--text-inv);
+  box-shadow: 0 2px 6px rgba(26, 109, 181, 0.25);
+}
+
+button[onclick="login()"]:hover,
+button[onclick="registro()"]:hover,
+button[onclick="guardar_recurso()"]:hover,
+button[onclick="guardar_resenya()"]:hover,
+button[onclick="buscar()"]:hover {
+  background: var(--blue-dark);
+  box-shadow: 0 3px 10px rgba(26, 109, 181, 0.35);
+  transform: translateY(-1px);
+}
+
+/* Acci�n positiva */
+button[onclick="anyadir()"],
+button[onclick="nueva_reserva()"],
+button[onclick="iniciar_registro()"],
+button[onclick="crear()"] {
+  background: var(--green);
+  color: var(--text-inv);
+}
+
+button[onclick="anyadir()"]:hover,
+button[onclick="nueva_reserva()"]:hover,
+button[onclick="iniciar_registro()"]:hover,
+button[onclick="crear()"]:hover {
+  background: #146847;
+  transform: translateY(-1px);
+}
+
+/* Secundario / volver */
+button[onclick="cancelar()"],
+button[onclick="cancelar_reserva()"],
+button[onclick="cancelar_resenya()"],
+button[onclick="volver()"],
+button[onclick="salir()"],
+button[onclick="editar()"] {
+  background: var(--surface-2);
+  color: var(--text-2);
+  border: 1px solid var(--border);
+}
+
+button[onclick="cancelar()"]:hover,
+button[onclick="cancelar_reserva()"]:hover,
+button[onclick="cancelar_resenya()"]:hover,
+button[onclick="volver()"]:hover,
+button[onclick="salir()"]:hover,
+button[onclick="editar()"]:hover {
+  background: var(--border);
+  color: var(--text);
+}
+
+/* ??? P�RRAFO BIENVENIDA ??????????????????????? */
+p:has(> #nombre_gestor),
+p:has(> #nombre_sanitario) {
+  background: var(--blue-light);
+  border-left: 3px solid var(--blue);
+  padding: 0.6rem 1rem;
+  border-radius: 0 var(--radius) var(--radius) 0;
+  font-weight: 500;
+  color: var(--blue-dark);
+  margin-bottom: 1rem;
+}
+
+/* ??? TABLAS ??????????????????????????????????? */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  margin-bottom: 1.2rem;
+  background: var(--surface);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(20, 50, 90, 0.06);
+}
+
+thead {
+  background: var(--blue-dark);
+  color: var(--text-inv);
+}
+
+th {
+  padding: 0.65rem 0.9rem;
+  text-align: left;
+  font-weight: 500;
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+td {
+  padding: 0.6rem 0.9rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 0.82rem;
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+tbody tr:hover {
+  background: var(--blue-light);
+  transition: background var(--transition);
+}
+
+tbody tr:nth-child(even) {
+  background: var(--surface-2);
+}
+
+tbody tr:nth-child(even):hover {
+  background: var(--blue-light);
+}
+
+/* ??? SPAN NUM. SERIE ?????????????????????????? */
+#numero_serie {
+  font-family: var(--mono);
+  font-weight: 500;
+  background: var(--surface-2);
+  padding: 0.2rem 0.5rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  font-size: 0.9rem;
+  color: var(--blue-dark);
+}
+
+/* ??? RESPONSIVE ??????????????????????????????? */
+@media (max-width: 640px) {
+
+  #login,
+  #datos_gestor,
+  #datos_sanitario,
+  #inicio,
+  #inicio_sanitario,
+  #recurso,
+  #nueva_reserva,
+  #nueva_resenya {
+    margin: 1rem;
+    padding: 1.25rem 1.25rem;
+  }
+
+  div:has(> input),
+  div:has(> select) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  input[type="text"],
+  input[type="password"],
+  input:not([type]),
+  select {
+    width: 100%;
+    min-width: unset;
+  }
+
+  table {
+    font-size: 0.78rem;
+  }
+
+  th,
+  td {
+    padding: 0.5rem 0.6rem;
+  }
+
+  h1 {
+    font-size: 0.85rem;
+    padding: 0.65rem 1rem;
+  }
+}

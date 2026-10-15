@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./ministerio.css">
+    <style>
+        .seccion {
+            display: none;
+        }
+
+        .activa {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Aplicación Gestor</h1>
+    <div id="login" class="seccion activa">
+        <h2>Login</h2>
+        <div>Usuario: <input id="usuario" /></div>
+        <div>Contrasenya: <input id="password" type="password" /></div>
+        <button onclick="login()">Entrar</button>
+        <button onclick="iniciar_registro()">Registrarse</button>
+    </div>
+    <div id="datos_gestor" class="seccion">
+        <h2>Datos Gestor</h2>
+        <div>Nombre: <input id="nombre_reg" type="text" /></div>
+        <div>Apellidos: <input id="apellidos_reg" type="text" /></div>
+        <div>Usuario: <input id="usuario_reg" type="text" /></div>
+        <div>Contrasenya: <input id="contrasenya_reg" type="password" /></div>
+        <button onclick="registro()">Guardar</button>
+        <button onclick="cancelar()">cancelar</button>
+    </div>
+    <div id="inicio" class="seccion">
+        <h2>Inicio</h2>
+        <p>Bienvenido, <span id="nombre_gestor"></span></p>
+        <button onclick="editar()">Editar Datos</button>
+
+        <!-- PRÁCTICA 3: integración con el Ministerio de Sanidad -->
+        <section class="panel-ministerio">
+            <div class="panel-cabecera">
+                <div>
+                    <h3>Ranking de reservas por área médica</h3>
+                    <span class="panel-sub">Datos del Ministerio de Sanidad · Nuestra área: Endocrinología (7)</span>
+                </div>
+                <div class="panel-botones">
+                    <button onclick="cargarRanking()">&#x21bb; Actualizar ranking</button>
+                    <button onclick="enviarReservasMinisterio()">&#x2191; Enviar reservas al Ministerio</button>
+                </div>
+            </div>
+
+            <section class="kpis" id="kpis_ranking"></section>
+
+            <table id="tabla_ranking">
+                <thead>
+                    <tr>
+                        <th>Pos.</th>
+                        <th>Área médica</th>
+                        <th>Volumen de reservas</th>
+                        <th>% total</th>
+                    </tr>
+                </thead>
+                <tbody id="lista_ranking">
+                </tbody>
+            </table>
+
+            <section class="resultado-envio" id="resultado_envio"></section>
+        </section>
+
+        <!-- EJERCICIO 2-->
+        <h3>Crear Área de Salud</h3>
+        <div>Código Postal: <input id="codigo_postal_area" type="text" /></div>
+        <div>Nombre Área: <input id="nombre_area" type="text" /></div>
+        <button onclick="crearAreaSalud()">Crear área de salud</button>
+
+        <h3>Busqueda de recursos</h3>
+        <div>Categoria:<select id="categoria">
+                <option value="">Selecciona una categoria</option>
+            </select></div>
+        <div>Modelo:<select id="modelo">
+                <option value="">Seleccione Primero categoria</option>
+            </select></div>
+
+        <div>Ubicacion:<select id="ubicacion">
+                <option value="">Todos</option>
+            </select></div>
+        <div>Estado:<select id="estado">
+                <option value="">Todos</option>
+            </select></div>
+        <button onclick="buscar()">Buscar</button>
+        <h2>Recursos</h2>
+        <table id="tabla_recursos">
+            <thead>
+                <tr>
+                    <th>N.serie</th>
+                    <th>Categoria</th>
+                    <th>Modelo</th>
+                    <th>Ubicacion</th>
+                    <th>Estado</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="lista_recursos">
+            </tbody>
+        </table>
+
+        <h3>Avisos</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Origen</th>
+                    <th>Texto</th>
+                </tr>
+            </thead>
+            <tbody id="lista_avisos"></tbody>
+        </table>
+
+        <button onclick="anyadir()">Añadir recurso</button>
+        <button onclick="wsAvisoDevolucion()">Recordatorio de devolución</button>
+        <button onclick="salir()">Salir</button>
+
+    </div>
+    <div id="recurso" class="seccion">
+        <h2>Recurso</h2>
+        <h3>Datos recurso</h3>
+        <div>Categoría:<select id="categoria_rec">
+                <option value=""></option>
+            </select></div>
+        <div>Modelo:<select id="modelo_rec">
+                <option value=""></option>
+            </select></div>
+        <div>Num. Serie:<input id="num_serie_rec" /></div>
+        <div>Ubicacion:<select id="ubicacion_rec">
+                <option value=""></option>
+            </select></div>
+        <div>Estado:<select id="estado_rec">
+                <option value=""></option>
+            </select></div>
+        <button onclick="guardar_recurso()">Guardar</button>
+        <h2>Reservas</h2>
+        <table id="tabla_reservas">
+            <thead>
+                <tr>
+                    <th>Sanitario</th>
+                    <th>H. estim.</th>
+                    <th>F. Petición</th>
+                    <th>F. Inicio</th>
+                    <th>F. Fin</th>
+                </tr>
+            </thead>
+            <tbody id="lista_reservas">
+            </tbody>
+        </table>
+        <h2>Reseñas</h2>
+        <table id="tabla_resenyas">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Sanitario</th>
+                    <th>Valoración</th>
+                    <th>Comentario</th>
+                </tr>
+            </thead>
+            <tbody id="lista_resenyas">
+            </tbody>
+        </table>
+        <button onclick="volver()">Volver al listado</button>
+    </div>
+    <script src="rest.js"></script>
+    <script src="main.js"></script>
+</body>
+
+</html>

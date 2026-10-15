@@ -1,0 +1,23 @@
+{
+  "name": "telemedicina-gestor",
+  "version": "1.0.0",
+  "description": "Aplicación del gestor (Práctica 3 Telemedicina): REST + JWT + integración con el Ministerio",
+  "main": "servidor_rest.js",
+  "scripts": {
+    "start": "node servidor_rest.js",
+    "local": "node servidor.js",
+    "ministerio": "node ministerio_prueba.js",
+    "local-prueba": "node -e \"process.env.MINISTERIO_URL='http://localhost:4999/telemedicina/api/datos';require('./servidor.js')\""
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "jwt-simple": "^0.5.6",
+    "mysql": "^2.18.1",
+    "pg": "^8.13.1",
+    "websocket": "^1.0.35"
+  }
+}
