@@ -670,33 +670,6 @@ function volver() {
     buscar();
 }
 
-// EJERCICIO 2
-function crearAreaSalud() {
-    var codigoPostal = document.getElementById("codigo_postal_area").value;
-    var nombre = document.getElementById("nombre_area").value;
-
-    if (!codigoPostal || !nombre) {
-        alert("Rellena el código postal y el nombre.");
-        return;
-    }
-
-    var datos = {
-        codigo_postal: codigoPostal,
-        nombre: nombre,
-        gestor: gestor_identificador
-    };
-
-    rest.post("/api/area_salud", datos, function (estado, respuesta) {
-        if (estado === 201) {
-            alert("Área de salud creada correctamente");
-            document.getElementById("codigo_postal_area").value = "";
-            document.getElementById("nombre_area").value = "";
-        } else {
-            alert("Error al crear el área de salud");
-        }
-    });
-}
-
 
 // =====================================================================================
 // PRÁCTICA 3 - Parte 1: envío de reservas al Ministerio de Sanidad y ranking por área

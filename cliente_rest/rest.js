@@ -31,7 +31,7 @@
 		var xhr = new XMLHttpRequest();
 		xhr.open(method, url, async);
 		//xhr.responseType = 'json'; // el tipo de la respuesta que se espera es JSON
-		if(data) xhr.setRequestHeader("Content-type", "application/json;charset=UTF-8"); // el tipo de la petición es JSON
+		if (data) xhr.setRequestHeader("Content-type", "application/json;charset=UTF-8"); // el tipo de la petición es JSON
 		debug(">>>", method, url, data);
 		xhr.send(data); // Enviar datos
 		function end() {
