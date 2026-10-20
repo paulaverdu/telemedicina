@@ -99,6 +99,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Las categorías, modelos y ubicaciones se cargan tras el login (los servicios necesitan el token)
     cargarEstados();
+    comprobarServicioPendiente(); // si venimos de escribir /api/... en la barra del navegador
 
     // Si el token caduca o no es válido, se vuelve al login
     rest.alNoAutorizado = function (respuesta) {
@@ -163,7 +164,7 @@ function inicializarSelectsRecurso() {
 }
 
 function cargarCategorias() {
-    rest.get("/api/categorias", function (estado, respuesta) {
+    rest.get("/api/categorias?token=" + rest.token, function (estado, respuesta) {
         if (estado == 200) {
             categorias_lista = respuesta;
             rellenarCategorias();
@@ -172,7 +173,7 @@ function cargarCategorias() {
 }
 
 function cargarModelos() {
-    rest.get("/api/modelos", function (estado, respuesta) {
+    rest.get("/api/modelos?token=" + rest.token, function (estado, respuesta) {
         if (estado == 200) {
             modelos_lista = respuesta;
         }
@@ -180,7 +181,7 @@ function cargarModelos() {
 }
 
 function cargarUbis() {
-    rest.get("/api/ubicaciones", function (estado, respuesta) {
+    rest.get("/api/ubicaciones?token=" + rest.token, function (estado, respuesta) {
         if (estado == 200) {
             ubis_lista = respuesta;
             rellenarUbicaciones();
@@ -288,8 +289,14 @@ function login() {
             // JWT: guardamos el token; rest.js lo añadirá a todas las peticiones siguientes
             rest.token = respuesta.token;
             gestor_identificador = respuesta.id;
+            localStorage.setItem("token", rest.token); // se guarda para poder abrir servicios desde la barra
+            var servicio = servicioPendiente();
+            if (servicio) { // se había escrito /api/... en la barra: ahora que hay sesión, se abre ese servicio
+                irAlServicio(servicio, rest.token);
+                return;
+            }
 
-            rest.get("/api/gestores/" + gestor_identificador, function (estado, respuesta) {
+            rest.get("/api/gestores/" + gestor_identificador + "?token=" + rest.token, function (estado, respuesta) {
                 if (estado == 200) {
                     var nombreCompleto = respuesta.nombre + " " + (respuesta.apellidos || "");
                     window.nombreGestorCompleto = nombreCompleto;
@@ -335,13 +342,13 @@ function registro() {
                 }
             });
         } else {
-            rest.get("/api/gestores/" + gestor_identificador, function (estado, respuesta) {
+            rest.get("/api/gestores/" + gestor_identificador + "?token=" + rest.token, function (estado, respuesta) {
                 if (estado == 200) {
                     var gestorActual = respuesta;
                     var usuarioCambiado = (gestorActual.usuario !== gestor.usuario);
                     var passwordCambiado = (gestorActual.password !== gestor.password);
 
-                    rest.put("/api/gestores/" + gestor_identificador, gestor, function (estado, respuesta) {
+                    rest.put("/api/gestores/" + gestor_identificador + "?token=" + rest.token, gestor, function (estado, respuesta) {
                         if (estado == 200 || estado == 201) {
                             if (usuarioCambiado || passwordCambiado) {
                                 alert("Usuario o contraseña modificados. Por favor, inicie sesión nuevamente.");
@@ -386,7 +393,7 @@ function buscar() {
     var ubicacion = document.getElementById("ubicacion").value;
     var estado = document.getElementById("estado").value;
 
-    rest.get("/api/recursos?categoria=" + categoria + "&modelo=" + modelo + "&ubicacion=" + ubicacion + "&estado=" + estado, function (estado, respuesta) {
+    rest.get("/api/recursos?categoria=" + categoria + "&modelo=" + modelo + "&ubicacion=" + ubicacion + "&estado=" + estado + "&token=" + rest.token, function (estado, respuesta) {
         if (estado != 200) return; // si el servidor da error
         var recursos_mostrar = respuesta;
         var lista = document.getElementById("lista_recursos");
@@ -458,7 +465,7 @@ function buscar() {
 }
 
 function eliminarRecurso(id) {
-    rest.delete("/api/recursos/" + id, function (estado, respuesta) {
+    rest.delete("/api/recursos/" + id + "?token=" + rest.token, function (estado, respuesta) {
         if (estado == 200) {
             alert("Recurso eliminado");
             buscar();
@@ -492,6 +499,7 @@ function iniciar_registro() {
 function salir() {
     gestor_identificador = "";
     rest.token = null; // al salir se descarta el token
+    localStorage.removeItem("token");
     document.getElementById("usuario").value = "";
     document.getElementById("password").value = "";
     desconectarWS();
@@ -504,7 +512,7 @@ function abrir(id) {
     recurso_actual_id = id;
     cambiarSeccion("recurso");
 
-    rest.get("/api/recursos/" + id, function (estado, respuesta) {
+    rest.get("/api/recursos/" + id + "?token=" + rest.token, function (estado, respuesta) {
         if (estado == 200) {
             ubi_select2.innerHTML = "";
             cat_select2.innerHTML = "";
@@ -577,7 +585,7 @@ function abrir(id) {
 
 function rellenarReservas(id) {
     var lista_reservas = [];
-    rest.get("/api/recursos/" + id + "/reservas", function (estado, respuesta) {
+    rest.get("/api/recursos/" + id + "/reservas?token=" + rest.token, function (estado, respuesta) {
         if (estado == 200) {
             lista_reservas = respuesta;
             reservas_tabla.innerHTML = "";
@@ -611,7 +619,7 @@ function rellenarReservas(id) {
 
 function rellenarResenyas(id) {
     var lista_resenyas = []
-    rest.get("/api/recursos/" + id + "/resenyas", function (estado, respuesta) {
+    rest.get("/api/recursos/" + id + "/resenyas?token=" + rest.token, function (estado, respuesta) {
         if (estado == 200) {
             lista_resenyas = respuesta;
             renyas_tabla.innerHTML = "";
@@ -644,13 +652,13 @@ function guardar_recurso() {
     };
 
     if (recurso_actual_id != null) {
-        rest.put("/api/recursos/" + recurso_actual_id, recurso, function (estado, respuesta) {
+        rest.put("/api/recursos/" + recurso_actual_id + "?token=" + rest.token, recurso, function (estado, respuesta) {
             if (estado == 200 || estado == 201) {
                 alert("Recurso actualizado");
             }
         });
     } else {
-        rest.post("/api/recursos", recurso, function (estado, respuesta) {
+        rest.post("/api/recursos?token=" + rest.token, recurso, function (estado, respuesta) {
             if (estado == 201) {
                 alert("Recurso creado");
                 var modeloObj = modelos_lista.find(m => m.id == recurso.modelo);
@@ -686,7 +694,7 @@ function crearAreaSalud() {
         gestor: gestor_identificador
     };
 
-    rest.post("/api/area_salud", datos, function (estado, respuesta) {
+    rest.post("/api/area_salud?token=" + rest.token, datos, function (estado, respuesta) {
         if (estado === 201) {
             alert("Área de salud creada correctamente");
             document.getElementById("codigo_postal_area").value = "";
@@ -751,7 +759,7 @@ async function enviarReservasMinisterio() {
     resultado.innerHTML = "Obteniendo reservas...";
 
     // 1) GET de todos los recursos
-    var resp = await rest.promesa("GET", "/api/recursos");
+    var resp = await rest.promesa("GET", "/api/recursos?token=" + rest.token);
     if (resp.status != 200) {
         resultado.textContent = "Error obteniendo los recursos (" + resp.status + ")";
         return;
@@ -763,7 +771,7 @@ async function enviarReservasMinisterio() {
     var descartadas = [];
     for (var i = 0; i < recursos.length; i++) {
         var recursoAux = recursos[i];
-        var respReservas = await rest.promesa("GET", "/api/recursos/" + recursoAux.id + "/reservas");
+        var respReservas = await rest.promesa("GET", "/api/recursos/" + recursoAux.id + "/reservas?token=" + rest.token);
         if (respReservas.status != 200) {
             descartadas.push({ id: "-", recurso: recursoAux.numero_serie, errores: ["no se han podido obtener las reservas"] });
             continue;
@@ -832,7 +840,7 @@ async function enviarReservasMinisterio() {
     }
 
     // 4) POST de la remesa (nuestro servidor añade id_area y fecha y la reenvía al Ministerio)
-    var respEnvio = await rest.promesa("POST", "/api/ministerio/datos", { datos: validas });
+    var respEnvio = await rest.promesa("POST", "/api/ministerio/datos?token=" + rest.token, { datos: validas });
     if (respEnvio.status == 200) {
         resultado.innerHTML += avisoHTML("aviso-ok", "&#x2714; Remesa enviada correctamente al Ministerio: " +
             respEnvio.response.enviadas + " reservas del área " + ID_AREA + " (" + AREAS_MEDICAS[ID_AREA] + ").");
@@ -893,7 +901,7 @@ function cargarRanking() {
     tabla.innerHTML = "<tr><td colspan='4' class='celda-estado'>Cargando datos del Ministerio...</td></tr>";
     kpis.innerHTML = "";
 
-    rest.get("/api/ministerio/datos", function (estado, respuesta) {
+    rest.get("/api/ministerio/datos?token=" + rest.token, function (estado, respuesta) {
         if (estado != 200) {
             tabla.innerHTML = "<tr><td colspan='4' class='celda-estado celda-error'>&#x26A0; No se han podido obtener los datos del Ministerio" +
                 (typeof respuesta === "string" ? ": " + escaparHTML(respuesta) : "") + "</td></tr>";
@@ -981,4 +989,43 @@ function cargarRanking() {
             tabla.appendChild(fila);
         });
     });
+}
+
+
+// =====================================================================================
+// Abrir un servicio /api/... escribiéndolo en la barra del navegador
+// Si se escribe sin token, el servidor manda aquí: /gestor/?volver=/api/gestores
+//  - Si ya se había iniciado sesión (token guardado y sin caducar) -> se abre el servicio con el token.
+//  - Si no -> se queda en el login y, al entrar, login() abre el servicio.
+// =====================================================================================
+function servicioPendiente() {
+    var volver = new URLSearchParams(location.search).get("volver");
+    if (volver && volver.indexOf("/api/") === 0) return volver; // solo servicios de nuestra API
+    return null;
+}
+
+function irAlServicio(servicio, token) {
+    location.replace(servicio + (servicio.indexOf("?") === -1 ? "?" : "&") + "token=" + encodeURIComponent(token));
+}
+
+function tokenCaducado(token) {
+    try {
+        var contenido = JSON.parse(atob(token.split(".")[1].replace(/-/g, "+").replace(/_/g, "/")));
+        return contenido.expira < Date.now();
+    } catch (e) {
+        return true;
+    }
+}
+
+function comprobarServicioPendiente() {
+    var servicio = servicioPendiente();
+    if (!servicio) return;
+    if (new URLSearchParams(location.search).get("error")) { // el token guardado no vale: hay que iniciar sesión
+        localStorage.removeItem("token");
+        return;
+    }
+    var token = localStorage.getItem("token");
+    if (token && !tokenCaducado(token)) {
+        irAlServicio(servicio, token); // ya había sesión: directo al servicio
+    }
 }

@@ -23,9 +23,6 @@
 			callback = data;
 			data = null;
 		}
-		if (rest.token) { // añadir el token JWT a la URL
-			url += (url.indexOf("?") >= 0 ? "&" : "?") + "token=" + encodeURIComponent(rest.token);
-		}
 		var async = typeof callback === "function"; // es una petición asincrona?
 		if (data && typeof data !== "string") data = JSON.stringify(data); // datos en texto formato JSON
 		var xhr = new XMLHttpRequest();
